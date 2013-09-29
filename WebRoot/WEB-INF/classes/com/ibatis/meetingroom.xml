@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="meetingroom">
+
+	<typeAlias alias="MeetingRoom" type="com.bean.MeetingRoom" />
+	<typeAlias alias="ReserveMR" type="com.bean.ReserveMR"/>
+	<typeAlias alias="UsedMR" type="com.bean.UsedMR"/>
+	<insert id="createMR" parameterClass="MeetingRoom">
+		insert into meetingroom (mrname,floor,station,department,state,createtime) values(#mrname#,#floor#,#station#,#department#,$state$,current_timestamp)
+	</insert>
+	<select id="findAllMR" resultClass="MeetingRoom">
+		select * from meetingroom
+	</select>
+	<update id="modifyMR" parameterClass="MeetingRoom">
+		update meetingroom set mrname=#mrname#,floor=#floor#,station=#station#,department=#department#,state=$state$ where id=$id$
+	</update>
+	<insert id="reserveMR" parameterClass="ReserveMR">
+		insert into reservemr (username,mrname,starttime,endtime) values (#username#,#mrname#,#starttime#,#endtime#)
+	</insert>
+	<select id="findUsedMR" resultClass="UsedMR">
+		<![CDATA[select t1.*,t2.floor,t2.station,t2.department from reservemr t1,meetingroom t2 where t1.mrname=t2.mrname and t1.endtime >#now# order by t1.mrname]]>
+	</select>
+	<delete id="deleteReMR" parameterClass="int">
+		delete from reservemr where id=$id$
+	</delete>
+	<select id="findReservedMRByTime" parameterClass="ReserveMR" resultClass="ReserveMR">
+		<![CDATA[select * from reservemr where mrname=#mrname# and starttime < #endtime# and endtime > #starttime# ]]>
+	</select>
+	<select id="findReservedMRByName" parameterClass="java.lang.String" resultClass="ReserveMR">
+		select * from reservemr where mrname=#mrname#
+	</select>
+
+</sqlMap>

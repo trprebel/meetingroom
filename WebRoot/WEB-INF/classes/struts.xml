@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+	"http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.multipart.maxSize" value="9314572800"></constant>
+	<package name="MeetingRoom" extends="json-default">
+		<action name="login" class="com.action.LoginAction" method="login">
+			<result name="error">/error.jsp</result>
+			<result name="admin">/main.jsp</result>
+			<result name="user">/welcome.jsp</result>
+			<result name="login">/login.jsp</result>
+		</action>
+		<action name="*MR" class="com.action.MeetingRoomAction" method="{1}">
+			<result name="create">/tab/createmr.jsp</result>
+			<result name="reserve">/tab/reservemr.jsp</result>
+			<result name="string" type="json">
+				<param name="root">result</param>
+			</result>
+			<result name="list" type="json">
+				<param name="root">resultTree</param>
+			</result>
+			<result name="used">/tab/usedmr.jsp</result>
+			<result name="requestused">/tab/usedmr.jsp</result>
+			<result name="error">/error.jsp</result>
+		</action>
+
+		<action name="requestlog" class="com.action.LogAction" method="requestlog">
+			<result name="success">/tab/log.jsp</result>
+			<result name="error">/error.jsp</result>
+		</action>
+
+	</package>
+	
+</struts>
