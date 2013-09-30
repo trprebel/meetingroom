@@ -51,5 +51,18 @@ public class MeetingRoom {
 	public void setState(int state) {
 		this.state = state;
 	}
+//	public Object clone()
+//	{
+//		Object o=null;    
+//		try    
+//		{    
+//			o=(MeetingRoom)super.clone();//Object 中的clone()识别出你要复制的是哪一个对象。    
+//		}    
+//		catch(CloneNotSupportedException e)    
+//		{    
+//			e.printStackTrace();   
+//		}    
+//		return o;  
+//	}
 
 }

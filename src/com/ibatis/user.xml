@@ -5,9 +5,14 @@
 <sqlMap namespace="user">
 
 	<typeAlias alias="User" type="com.bean.User" />
+	<resultMap id="users" class="String">
+		<result property="username" column="username" javaType="java.lang.String" jdbcType="varchar" nullValue="" />
+	</resultMap>
 	<select id="findUserByName" resultClass="User" parameterClass="java.lang.String">
 		select * from user where username=#username# and state=1
     </select>
-
+	<select id="findAllUsername" resultClass="String">
+		select username from user
+	</select>
 
 </sqlMap>

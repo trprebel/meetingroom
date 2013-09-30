@@ -11,7 +11,7 @@
 		insert into meetingroom (mrname,floor,station,department,state,createtime) values(#mrname#,#floor#,#station#,#department#,$state$,current_timestamp)
 	</insert>
 	<select id="findAllMR" resultClass="MeetingRoom">
-		select * from meetingroom
+		select * from meetingroom order by id
 	</select>
 	<update id="modifyMR" parameterClass="MeetingRoom">
 		update meetingroom set mrname=#mrname#,floor=#floor#,station=#station#,department=#department#,state=$state$ where id=$id$
@@ -28,8 +28,8 @@
 	<select id="findReservedMRByTime" parameterClass="ReserveMR" resultClass="ReserveMR">
 		<![CDATA[select * from reservemr where mrname=#mrname# and starttime < #endtime# and endtime > #starttime# ]]>
 	</select>
-	<select id="findReservedMRByName" parameterClass="java.lang.String" resultClass="ReserveMR">
-		select * from reservemr where mrname=#mrname#
+	<select id="findReservedMRByName" parameterClass="map" resultClass="ReserveMR">
+		<![CDATA[select * from reservemr where mrname=#mrname# and endtime > #time#]]>
 	</select>
 
 </sqlMap>

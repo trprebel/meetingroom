@@ -12,7 +12,7 @@
 			<result name="login">/login.jsp</result>
 		</action>
 		<action name="*MR" class="com.action.MeetingRoomAction" method="{1}">
-			<result name="create">/tab/createmr.jsp</result>
+			<result name="create">/tab/editmr.jsp</result>
 			<result name="reserve">/tab/reservemr.jsp</result>
 			<result name="string" type="json">
 				<param name="root">result</param>

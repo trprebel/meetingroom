@@ -1,6 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <jsp:directive.page import="com.bean.UsedMR" />
 <jsp:directive.page import="com.bean.User" />
+<%@taglib prefix="c" uri="/jstl/c.tld"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -8,6 +9,7 @@
 			+ path + "/";
 	List<UsedMR> usedmrs = (List<UsedMR>) request
 			.getAttribute("usedmrlist");
+	pageContext.setAttribute("usedmrs",usedmrs);
 	User user = (User) session.getAttribute("user");
 %>
 
@@ -62,6 +64,26 @@
   	}
   </script>
 	<body>
+		<div align="right">
+			<select>
+				<option></option>
+				<c:forEach var="mr" items="${mrlist}">
+					<c:if test="${mr.state==1 }">
+						<option value="${mr.mrname }">
+							${mr.mrname }
+						</option>
+					</c:if>
+				</c:forEach>
+			</select>
+			<select>
+				<option></option>
+				<c:forEach var="user" items="${usernames}">
+					<option value="${user.mrname }">
+						${user.mrname }
+					</option>
+				</c:forEach>
+			</select>
+		</div>
 		<table id="table" align="center">
 		<caption>会议室预定表</caption>
 			<tr>

@@ -1,17 +1,16 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="/jstl/c.tld"%>
-<jsp:directive.page import="com.bean.MeetingRoom" />
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
-	List<MeetingRoom> mrs=(List<MeetingRoom>) session.getAttribute("mrlist");
-	for(int i=0;i<mrs.size();i++)
-	{
-		if(mrs.get(i).getState()==0) mrs.remove(i);
-	}
-	pageContext.setAttribute("mrs",mrs);
+	//List<MeetingRoom> mrs=(List<MeetingRoom>) session.getAttribute("mrlist");
+	//for(int i=0;i<mrs.size();i++)
+	//{
+	//	if(mrs.get(i).getState()==0) mrs.remove(i);
+	//}
+	//pageContext.setAttribute("mrs",mrs);
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -84,8 +83,23 @@
      			success:function(data){
      			var obj = $.parseJSON(data);
      			//var json = eval("("+data+")");
-     			$.each(obj,function(commentIndex, comment) {  //遍历返回数组的每一个实体
-           			alert(comment.mrname);                    //输出实体的sshortName属性的值
+     			var tb=document.getElementById("usedtimetb");
+     			//alert(tb.rows.length);
+     			var length=tb.rows.length;
+     			for(var i=1;i<length;i++)
+           		{
+           			tb.deleteRow(i);
+           		}
+     			$.each(obj,function(i, usedmr) {  //遍历返回数组的每一个实体
+           			//alert(usedmr.mrname);       //输出实体的sshortName属性的值
+           			
+					var tr=tb.insertRow(-1);
+					var td1=tr.insertCell(-1);
+					td1.innerHTML=usedmr.username;
+					var td2=tr.insertCell(-1);
+					td2.innerHTML=usedmr.starttime;
+					var td3=tr.insertCell(-1);
+					td3.innerHTML=usedmr.endtime;
            			})
      			
      			//obj.resultTree 
@@ -108,10 +122,12 @@
 					</td>
 					<td>
 						<select name="mrname" id="mrname" onchange="javascript:changemr()">
-							<c:forEach var="mr" items="${mrs}">
+							<c:forEach var="mr" items="${mrlist}">
+							<c:if test="${mr.state==1 }">
 								<option value="${mr.mrname }">
 									${mr.mrname }
 								</option>
+							</c:if>
 							</c:forEach>
 						</select>
 					</td>
@@ -147,11 +163,20 @@
 			</table>
 
 		</form>
+		<table id="usedtimetb" align="center" border="1">
+		<caption>已预订时间列表</caption>
+			<tr>
+				<td>预订人</td>
+				<td>开始时间</td>
+				<td>结束时间</td>
+			</tr>
+		</table>
 	</body>
 	<script type="text/javascript">
-  if('${messages}'!="")
-  {
-  	alert('${messages}');
-  }
+  	if('${messages}'!="")
+  	{
+  		alert('${messages}');
+  	}
+  	changemr();
   </script>
 </html>

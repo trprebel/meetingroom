@@ -2,6 +2,7 @@ package com.dao.impl;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.bean.MeetingRoom;
 import com.bean.ReserveMR;
@@ -34,8 +35,8 @@ public class MeetingRoomDao {
 	public List<ReserveMR> findReservedMRByTime(ReserveMR reservemr) throws Exception{
 		return (List<ReserveMR>)SqlMap.getSqlMapClient().queryForList("findReservedMRByTime",reservemr);
 	}
-	public List<ReserveMR> findReservedMRByName(String mrname) throws Exception{
-		return (List<ReserveMR>)SqlMap.getSqlMapClient().queryForList("findReservedMRByName",mrname);
+	public List<ReserveMR> findReservedMRByName(Map<String, String> map) throws Exception{
+		return (List<ReserveMR>)SqlMap.getSqlMapClient().queryForList("findReservedMRByName",map);
 	}
 
 }

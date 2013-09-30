@@ -60,6 +60,7 @@
   </script>
 	<body>
 		<table align="center">
+		<caption>会议室列表</caption>
 			<tr>
 				<td>
 					ID

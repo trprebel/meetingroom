@@ -7,11 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.struts2.ServletActionContext;
 
@@ -20,6 +16,7 @@ import com.bean.ReserveMR;
 import com.bean.UsedMR;
 import com.bean.User;
 import com.dao.impl.MeetingRoomDao;
+import com.dao.impl.UserDao;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class MeetingRoomAction extends ActionSupport{
@@ -39,8 +36,8 @@ public class MeetingRoomAction extends ActionSupport{
 	private MeetingRoomDao mrdao;
 	public String messages;
 	//private JSONObject result;
-	private List<ReserveMR> resultTree;
-	private Map <String,String> result;
+	private List<ReserveMR> resultTree; //json list类型返回结果
+	private Map <String,String> result; //json map类型返回结果
 	//private JSONArray resultTree;
 
 //	public JSONArray getResultTree() {
@@ -103,11 +100,25 @@ public class MeetingRoomAction extends ActionSupport{
 	public void setEndtime(String endtime) {
 		this.endtime = endtime;
 	}
+	public List<ReserveMR> getResultTree() {
+		return resultTree;
+	}
+	public void setResultTree(List<ReserveMR> resultTree) {
+		this.resultTree = resultTree;
+	}
+	public Map<String, String> getResult() {
+		return result;
+	}
+	public void setResult(Map<String, String> result) {
+		this.result = result;
+	}
 	//创建会议室
 	public String create()
 	{
 		try
 		{
+			HttpServletRequest request=ServletActionContext.getRequest();
+			HttpSession session=request.getSession();
 			MeetingRoom mr=new MeetingRoom();
 			mr.setDepartment(department);
 			mr.setFloor(floor);
@@ -118,6 +129,10 @@ public class MeetingRoomAction extends ActionSupport{
 			mrdao=new MeetingRoomDao();
 			mrdao.createMR(mr);
 			RecordLog.recordlog("创建会议室："+mrname);
+			mrdao=new MeetingRoomDao();
+			List<MeetingRoom> meetingrooms=mrdao.findAllMR();
+			//System.out.println(meetingrooms.get(0).getMrname());
+			session.setAttribute("mrlist", meetingrooms);
 			//System.out.println(mrname);
 			messages="创建成功！";
 			return "create";
@@ -218,6 +233,9 @@ public class MeetingRoomAction extends ActionSupport{
 			//System.out.println(snow);
 			List<UsedMR> usedmr=mrdao.findUsedMR(snow);
 			request.setAttribute("usedmrlist", usedmr);
+			UserDao userdao=new UserDao();
+			List<String> usernames=userdao.findAllUsername();
+			request.setAttribute("usernames", usernames);
 			return "requestused";
 		}
 		catch(Exception e)
@@ -249,16 +267,23 @@ public class MeetingRoomAction extends ActionSupport{
 		}
 		return "string";
 	}
+	//某个会议室已被预订的时间列表
 	public String timelist()
 	{
 		try
 		{
 			//System.out.println(mrname);
-			HttpServletResponse response;
-			response = ServletActionContext.getResponse();
-			response.setCharacterEncoding("utf-8");
+			//HttpServletResponse response;
+			//response = ServletActionContext.getResponse();
+			//response.setCharacterEncoding("utf-8");
+			
+			Date now=new Date();
+			String snow=(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(now);
+			Map<String, String>map=new HashMap<String, String>();
+			map.put("mrname", mrname);
+			map.put("time", snow);
 			mrdao=new MeetingRoomDao();
-			List<ReserveMR> reservemrs= mrdao.findReservedMRByName(mrname);
+			List<ReserveMR> reservemrs= mrdao.findReservedMRByName(map);//只查找当前时间之后的
 			//if(reservemrs.isEmpty()) System.out.println("无数据");
 			//resultTree=new JSONArray();
 			//JSONObject jobject=JSONObject.fromObject(reservemrs.get(0));
@@ -282,18 +307,7 @@ public class MeetingRoomAction extends ActionSupport{
 //	public void setResult(JSONObject result) {
 //		this.result = result;
 //	}
-	public List<ReserveMR> getResultTree() {
-		return resultTree;
-	}
-	public void setResultTree(List<ReserveMR> resultTree) {
-		this.resultTree = resultTree;
-	}
-	public Map<String, String> getResult() {
-		return result;
-	}
-	public void setResult(Map<String, String> result) {
-		this.result = result;
-	}
+
 
 
 
