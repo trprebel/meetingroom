@@ -40,7 +40,7 @@ public class MeetingRoomAction extends ActionSupport{
 	public String messages;
 	//private JSONObject result;
 	private List<ReserveMR> resultTree;
-	Map <String,String> result;
+	private Map <String,String> result;
 	//private JSONArray resultTree;
 
 //	public JSONArray getResultTree() {
