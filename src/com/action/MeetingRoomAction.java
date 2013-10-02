@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+
 import org.apache.struts2.ServletActionContext;
 
 import com.bean.MeetingRoom;
@@ -243,8 +244,8 @@ public class MeetingRoomAction extends ActionSupport{
 		try{
 			mrdao=new MeetingRoomDao();
 			Date now=new Date();
-			String snow=(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(now);
-			//System.out.println(snow);
+			String snow=(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(now);
+			System.out.println(snow);
 			List<UsedMR> usedmr=mrdao.findUsedMR(snow);
 			request.setAttribute("usedmrlist", usedmr);
 			UserDao userdao=new UserDao();
@@ -292,7 +293,7 @@ public class MeetingRoomAction extends ActionSupport{
 			//response.setCharacterEncoding("utf-8");
 			
 			Date now=new Date();
-			String snow=(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(now);
+			String snow=(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(now);
 			Map<String, String>map=new HashMap<String, String>();
 			map.put("mrname", mrname);
 			map.put("time", snow);
@@ -322,14 +323,13 @@ public class MeetingRoomAction extends ActionSupport{
 		{
 			//System.out.println(mrname);
 			ReserveMR reservemr=new ReserveMR();
-			Date now=new Date();
-			String snow=(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(now);
-			if(!mrname.equals(""))reservemr.setMrname(mrname);
+			
+			reservemr.setMrname(mrname);
 			//System.out.println(reservemr.getMrname());
-			if(!username.equals("")) reservemr.setUsername(username);
+			reservemr.setUsername(username);
 			//System.out.println(reservemr.getUsername());
 			if(!starttime.equals("")) reservemr.setStarttime(starttime);
-			else reservemr.setStarttime(snow);
+			//else reservemr.setStarttime(snow);
 			//System.out.println(reservemr.getStarttime());
 			if(!endtime.equals("")) reservemr.setEndtime(endtime);
 			//System.out.println(reservemr.getEndtime());

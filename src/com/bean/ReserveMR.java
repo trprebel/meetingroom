@@ -1,5 +1,8 @@
 package com.bean;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ReserveMR {
 
 	private int id;
@@ -9,9 +12,11 @@ public class ReserveMR {
 	private String endtime;
 	public ReserveMR()//用于搜索功能的初始化
 	{
-		username=".";
-		mrname=".";
-		starttime="1980-01-01 00:00:00";
+		//username=".";
+		//mrname=".";
+		Date now=new Date();
+		String snow=(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(now);
+		starttime=snow;
 		endtime="2053-01-01 00:00:00";
 	}
 	public int getId() {
