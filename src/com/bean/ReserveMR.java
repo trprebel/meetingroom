@@ -7,6 +7,13 @@ public class ReserveMR {
 	private String mrname;
 	private String starttime;
 	private String endtime;
+	public ReserveMR()//用于搜索功能的初始化
+	{
+		username=".";
+		mrname=".";
+		starttime="1980-01-01 00:00:00";
+		endtime="2053-01-01 00:00:00";
+	}
 	public int getId() {
 		return id;
 	}

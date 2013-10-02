@@ -88,7 +88,7 @@
      			var length=tb.rows.length;
      			for(var i=1;i<length;i++)
            		{
-           			tb.deleteRow(i);
+           			tb.deleteRow(-1);
            		}
      			$.each(obj,function(i, usedmr) {  //遍历返回数组的每一个实体
            			//alert(usedmr.mrname);       //输出实体的sshortName属性的值

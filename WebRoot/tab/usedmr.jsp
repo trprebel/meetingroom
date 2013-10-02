@@ -9,7 +9,7 @@
 			+ path + "/";
 	List<UsedMR> usedmrs = (List<UsedMR>) request
 			.getAttribute("usedmrlist");
-	pageContext.setAttribute("usedmrs",usedmrs);
+	pageContext.setAttribute("usedmrs", usedmrs);
 	User user = (User) session.getAttribute("user");
 %>
 
@@ -31,13 +31,15 @@
 
 	</head>
 	<script type="text/javascript" src="js/jquery-1.6.js"></script>
-
+	<script language="javascript" type="text/javascript"
+		src="<%=basePath%>My97DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript">
 
 	function modify(i)
   	{
-  		//alert(document.getElementById("mrname"+i).value);
-
+  		//alert(i);
+  		//alert(document.getElementById("id"+i).value);
+		//return;
   		var postdata = {
   			id :document.getElementById("id"+i).value,
   			mrname:document.getElementById("mrname"+i).value
@@ -57,16 +59,93 @@
 				tb.deleteRow(tr.rowIndex);
      		},
     		error:function(){
-       			alert("修改失败");
+       			alert("取消失败！");
     		}
 
     	});
   	}
+  	function search()
+  	{
+  		//alert("search");
+  		//alert($("#smrname").val());
+  		var postdata = {
+  			username :$("#susername").val(),
+  			mrname:$("#smrname").val(),
+  			starttime:$("#sstarttime").val(),
+  			endtime:$("#sendtime").val()
+    	};
+  	
+		$.ajax({
+     		type:'post',
+     		data:postdata,
+     		url:'searchusedMR.action',
+     		dataType:'text',
+     		success:function(data){
+     		
+     			var obj = $.parseJSON(data);
+     			//alert(obj);
+				//alert("success");
+				//var json = eval("("+data+")");
+     			//var tb=$("#table");
+     			var tb=document.getElementById("table");
+     			//alert(tb.rows.length);
+     			var length=tb.rows.length;
+     			for(var i=1;i<length;i++)
+           		{
+           			tb.deleteRow(-1);
+           		}
+     			$.each(obj,function(i, usedmr) {  //遍历返回数组的每一个实体
+           			//alert(usedmr.mrname);       //输出实体的sshortName属性的值
+           			
+					var tr=tb.insertRow(-1);
+					tr.id="seq"+i;
+					var td0=tr.insertCell(-1);
+					td0.innerHTML="<input type='hidden' name='id' id='id"+i+"' border='0' readonly value='"+usedmr.id+"'>";
+					var td1=tr.insertCell(-1);
+					td1.innerHTML="<input type='text' name='username' id='username"+i+"' border='0' style='width: 100px' readonly value='"+usedmr.username+"'>";
+					var td2=tr.insertCell(-1);
+					td2.innerHTML="<input type='text' name='mrname' id='mrname"+i+"' border='0' style='width: 150px' readonly value='"+usedmr.mrname+"'>";
+					var td3=tr.insertCell(-1);
+					td3.innerHTML="<input type='text' name='floor' id='floor"+i+"' border='0' style='width: 50px' readonly value='"+usedmr.floor+"'>";
+					var td4=tr.insertCell(-1);
+					td4.innerHTML="<input type='text' name='station' id='station"+i+"' border='0' style='width: 200px' readonly value='"+usedmr.station+"'>";
+					var td5=tr.insertCell(-1);
+					td5.innerHTML="<input type='text' name='department' id='department"+i+"' border='0' style='width: 130px' readonly value='"+usedmr.department+"'>";
+					var td6=tr.insertCell(-1);
+					td6.innerHTML="<input type='text' name='starttime' id='starttime"+i+"' border='0' style='width: 160px' readonly value='"+usedmr.starttime+"'>";
+					var td7=tr.insertCell(-1);
+					td7.innerHTML="<input type='text' name='endtime' id='endtime"+i+"' border='0' style='width: 160px' readonly value='"+usedmr.endtime+"'>";
+					//alert(usedmr.username);
+					if("${user.username}"==usedmr.username||"${user.type}"==1)
+					{
+						var td8=tr.insertCell(-1);
+						td8.innerHTML="<td><a href='javascript:modify(" + i+ ")'>取消</a></td>"
+					}
+
+           			})
+     		},
+    		error:function(){
+       			alert("搜索失败！");
+    		}
+
+    	});
+  		
+  		
+  	}
+  	function changemrname()
+  	{
+  		alert($("#smrname").val());
+  	}
+  	function changeusername()
+  	{
+  		alert($("#susername").val());
+  	}
   </script>
 	<body>
-		<div align="right">
-			<select>
-				<option></option>
+		<!-- 搜索模块 -->
+		<div align="center">
+			<select id="smrname" onchange="javascript:changemrname()">
+				<option value=""></option>
 				<c:forEach var="mr" items="${mrlist}">
 					<c:if test="${mr.state==1 }">
 						<option value="${mr.mrname }">
@@ -75,17 +154,30 @@
 					</c:if>
 				</c:forEach>
 			</select>
-			<select>
-				<option></option>
+			<select id="susername" onchange="javascript:changeusername()">
+				<option value=""></option>
 				<c:forEach var="user" items="${usernames}">
-					<option value="${user.mrname }">
-						${user.mrname }
+					<option value="${user }">
+						${user }
 					</option>
 				</c:forEach>
 			</select>
+			<!-- 搜索的开始和结束时间 -->
+			开始时间：
+			<input class="Wdate" name="sstarttime" id="sstarttime" type="text"
+				onClick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+				style="width: 230px" />
+			结束时间：
+			<input class="Wdate" name="sendtime" id="sendtime" type="text"
+				onClick="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"
+				style="width: 230px" />
+			<input type="button" name="search" id="search"
+				onclick="javascript:search()" value="搜索" />
 		</div>
 		<table id="table" align="center">
-		<caption>会议室预定表</caption>
+			<caption>
+				会议室预定表
+			</caption>
 			<tr>
 				<td>
 				</td>
@@ -119,7 +211,7 @@
 				for (UsedMR usedmr : usedmrs) {
 			%>
 
-			<tr id="<%="seq"+i %>">
+			<tr id="<%="seq" + i%>">
 				<td>
 					<input type="hidden" name="id" id="<%="id" + i%>" border="0"
 						readonly value="<%=usedmr.getId()%>">
@@ -155,7 +247,8 @@
 						value="<%=usedmr.getEndtime()%>">
 				</td>
 				<%
-					if ((user.getUsername().equals(usedmr.getUsername()))||(user.getType()==1)) {
+					if ((user.getUsername().equals(usedmr.getUsername()))
+								|| (user.getType() == 1)) {
 							out.print("<td><a href='javascript:modify(" + i
 									+ ")'>取消</a></td>");
 						}

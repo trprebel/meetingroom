@@ -31,5 +31,8 @@
 	<select id="findReservedMRByName" parameterClass="map" resultClass="ReserveMR">
 		<![CDATA[select * from reservemr where mrname=#mrname# and endtime > #time#]]>
 	</select>
+	<select id="findRservedMRByAtt" parameterClass="ReserveMR" resultClass="UsedMR">
+		<![CDATA[select t1.*,t2.floor,t2.station,t2.department from reservemr t1,meetingroom t2 where t1.username regexp #username# and t1.mrname regexp #mrname# and t2.mrname=t1.mrname and t1.starttime < #endtime# and t1.endtime > #starttime# order by t1.mrname]]>
+	</select>
 
 </sqlMap>

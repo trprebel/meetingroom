@@ -23,6 +23,9 @@
 			<result name="used">/tab/usedmr.jsp</result>
 			<result name="requestused">/tab/usedmr.jsp</result>
 			<result name="error">/error.jsp</result>
+			<result name="searchedmrlist" type="json">
+				<param name="root">MRList</param>
+			</result>
 		</action>
 
 		<action name="requestlog" class="com.action.LogAction" method="requestlog">

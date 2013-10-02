@@ -33,11 +33,13 @@ public class MeetingRoomAction extends ActionSupport{
 	private String state;
 	private String starttime;
 	private String endtime;
+	private String username;
 	private MeetingRoomDao mrdao;
 	public String messages;
 	//private JSONObject result;
-	private List<ReserveMR> resultTree; //json list类型返回结果
+	private List<ReserveMR> resultTree; //json list类型返回结果,某会议室的预定时间列表
 	private Map <String,String> result; //json map类型返回结果
+	private List<UsedMR> MRList;   //json 按条件搜索结果
 	//private JSONArray resultTree;
 
 //	public JSONArray getResultTree() {
@@ -111,6 +113,18 @@ public class MeetingRoomAction extends ActionSupport{
 	}
 	public void setResult(Map<String, String> result) {
 		this.result = result;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public List<UsedMR> getMRList() {
+		return MRList;
+	}
+	public void setMRList(List<UsedMR> list) {
+		MRList = list;
 	}
 	//创建会议室
 	public String create()
@@ -301,6 +315,40 @@ public class MeetingRoomAction extends ActionSupport{
 		}
 		return "list";
 	}
+	//按条件搜索已预订的会议室
+	public String searchused()
+	{
+		try
+		{
+			//System.out.println(mrname);
+			ReserveMR reservemr=new ReserveMR();
+			Date now=new Date();
+			String snow=(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(now);
+			if(!mrname.equals(""))reservemr.setMrname(mrname);
+			//System.out.println(reservemr.getMrname());
+			if(!username.equals("")) reservemr.setUsername(username);
+			//System.out.println(reservemr.getUsername());
+			if(!starttime.equals("")) reservemr.setStarttime(starttime);
+			else reservemr.setStarttime(snow);
+			//System.out.println(reservemr.getStarttime());
+			if(!endtime.equals("")) reservemr.setEndtime(endtime);
+			//System.out.println(reservemr.getEndtime());
+			MeetingRoomDao mrdao=new MeetingRoomDao();
+			MRList= mrdao.findReservedMRByAtt(reservemr);
+//			if(MRList.isEmpty()) System.out.println("mrlist is null");
+//			else{
+//				System.out.println(MRList.get(0).getId());
+//				System.out.println(MRList.get(1).getId());
+//			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return "searchedmrlist";
+	}
+
+
 //	public JSONObject getResult() {
 //		return result;
 //	}

@@ -15,7 +15,6 @@ public class UserDao {
 	//查找所有用户名
 	public List<String> findAllUsername() throws Exception{
 		return (List<String>)SqlMap.getSqlMapClient().queryForList("findAllUsername");
-		
 	}
 
 }
