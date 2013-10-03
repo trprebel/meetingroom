@@ -9,8 +9,11 @@
     <insert id="insertLog" parameterClass="Log">
     	insert into log (username,operate,time) values(#username#,#operate#,#time#)
     </insert>
-    <select id="findAllLog" resultClass="Log">
-    	select * from log
+    <select id="findLogList" parameterClass="com.page.Program" resultClass="Log">
+    	select * from log limit $start$,$lenth$
+    </select>
+    <select id="findPageCount" resultClass="int">
+    	select count(1) from log
     </select>
 
 
